@@ -12,8 +12,9 @@
     />
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
+    <link rel="stylesheet" href="./assets/popup.css" />
     <script src="script.js" defer></script>
-    <script src="connexion.js" defer></script>
+    <script src="popup.js" defer></script>
   </head>
   <body>
     <header>
@@ -62,6 +63,7 @@
           <!--------------------------------------------------->
         </div>
       </section>
+      <button id="galleryCustom" class="galleryCustomizing">Modifier</button>
       <section id="contact">
         <h2>Contact</h2>
         <p>Vous avez un projet ? Discutons-en !</p>
@@ -84,5 +86,20 @@
         </ul>
       </nav>
     </footer>
+
+    <div class="popupBackground" id="popBackground">
+      <div class="popup">
+        <div class="modalGallery">
+          <h3>Galerie photo</h3>
+          <div id="imageGallery" class="image_Gallery"></div>
+          <hr class="fine-line" />
+          <div class="addImage">
+            <button id="modalButton" class="modal_Button">
+              Ajoutez une photo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -37,7 +37,7 @@ myForm.addEventListener("submit", async (event) => {
         console.log("Formulaire validé, envoi des données à l'API...");
 
         try {
-            const response = await fetch('http://localhost:5678/api-docs/#/default/post_users_login', {
+            const response = await fetch('http://localhost:5678/api/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

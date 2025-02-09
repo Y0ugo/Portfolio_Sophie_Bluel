@@ -1,0 +1,93 @@
+.popupBackground {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(58, 58, 58, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupBackground.active {
+    display: flex;
+}
+
+.popup {
+    position: relative;
+    width: 40%;
+    height: 90vh;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.modalGallery {
+    margin: 60px 100px 60px 100px;
+    height: auto;
+    
+}
+
+.image_Gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 5px; 
+    justify-content: center;
+    margin-bottom: 90px;
+}
+
+
+.image_Gallery figure {
+    margin: 0;
+    text-align: center;
+    width: 95%;
+    margin: 0 auto;
+    
+}
+
+.image_Gallery img {
+    width: 100%;
+    height: auto;
+    
+}
+
+.image_Gallery figcaption {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.fine-line {
+    border-top: 1px solid #000;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.modal_Button {
+    margin-top: 50px;
+    width: 55%;
+    height: 45px;
+    background-color: #1D6154;
+    text-decoration: none;
+    border-radius: 30px;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-family: 'Syne';
+    
+}
+
+.modalGallery h3 {
+    text-align: center;
+    font-size: 34px;
+    margin-bottom: 80px;
+    font-weight: 500;
+}
+
+.addImage { 
+    display: flex;
+    justify-content: center;
+}

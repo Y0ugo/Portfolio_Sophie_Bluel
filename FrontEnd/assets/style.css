@@ -197,3 +197,8 @@ footer nav ul {
 	margin: 2em
 }
 
+.image_Gallery img.delete {
+	width: 30px;
+    position: absolute;
+    margin-left: -30px;
+}
