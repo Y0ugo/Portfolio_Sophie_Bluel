@@ -89,7 +89,8 @@
 
     <div class="popupBackground" id="popBackground">
       <div class="popup">
-        <div class="modalGallery">
+        <!-- 🖼️ Première vue : Galerie -->
+        <div class="modalGallery" id="modalGallery">
           <h3>Galerie photo</h3>
           <div id="imageGallery" class="image_Gallery"></div>
           <hr class="fine-line" />
@@ -97,6 +98,40 @@
             <button id="modalButton" class="modal_Button">
               Ajoutez une photo
             </button>
+          </div>
+        </div>
+
+        <!-- ➕ Deuxième vue : Formulaire d'ajout -->
+        <div id="modalAddImage" class="popup" style="display: none">
+          <button id="backButton">⬅ Précédent</button>
+          <div class="conteneurAjoutImage">
+            <h3>Ajout photo</h3>
+            <div class="uploadSection">
+              <img class="uploadImage" src="assets/images/Rectangle 21.png" />
+              <label for="imageUpload" class="custom-file-upload">
+                + Ajouter photo
+              </label>
+              <input type="file" id="imageUpload" accept="image/*" />
+            </div>
+            <div class="contentImage">
+              <div class="titreImage">
+                <p>Titre</p>
+                <input
+                  type="text"
+                  id="imageTitle"
+                  placeholder="Titre de l’image"
+                />
+              </div>
+              <div class="categorieImage">
+                <p>Catégorie</p>
+                <select id="imageCategory">
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="cat1">Catégorie 1</option>
+                  <option value="cat2">Catégorie 2</option>
+                </select>
+              </div>
+              <button id="submitImage">Valider</button>
+            </div>
           </div>
         </div>
       </div>

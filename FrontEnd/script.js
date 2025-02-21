@@ -25,7 +25,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       // Fonction de suppression de projet
-      function deleteProjet(id, element) {
+      function deleteProjet(id) {
         fetch(`http://localhost:5678/api/works/${id}`, {
           method: "DELETE",
           headers: {
@@ -37,10 +37,12 @@ window.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) {
               throw new Error("Échec de la suppression du projet");
             }
-            return response.json();
           })
           .then(() => {
-            element.remove(); // Supprimer du DOM
+            document.getElementById("projet_" + id).remove();
+            document.getElementById("modale_projet_" + id).remove();
+
+            return response.json();
           })
           .catch((error) => {
             console.error("Erreur :", error);
@@ -57,7 +59,14 @@ window.addEventListener("DOMContentLoaded", () => {
         conteneur.innerHTML = "";
         projetsFiltres.forEach((projet) => {
           const figure = document.createElement("figure");
-          figure.setAttribute("id", "projet_" + projet.id);
+
+          //si c'est la modale
+
+          if (!afficherTitre) {
+            figure.setAttribute("id", "modale_projet_" + projet.id);
+          } else {
+            figure.setAttribute("id", "projet_" + projet.id);
+          }
 
           const img = document.createElement("img");
           img.src = projet.imageUrl;
@@ -73,7 +82,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             // Ajoute un écouteur d'événement sur l'icône de suppression
             img_trash.addEventListener("click", () => {
-              deleteProjet(projet.id, figure);
+              deleteProjet(projet.id);
             });
 
             figure.appendChild(img_trash);
@@ -110,4 +119,22 @@ window.addEventListener("DOMContentLoaded", () => {
     .catch((error) => {
       console.error("Erreur :", error);
     });
+
+  // Sélection des éléments de la modale
+  const modalGallery = document.getElementById("modalGallery");
+  const modalAddImage = document.getElementById("modalAddImage");
+  const modalButton = document.getElementById("modalButton");
+  const backButton = document.getElementById("backButton");
+
+  // Quand on clique sur "Ajouter une photo", on cache la galerie et on affiche la 2e modale
+  modalButton.addEventListener("click", () => {
+    modalGallery.style.display = "none";
+    modalAddImage.style.display = "block";
+  });
+
+  // Quand on clique sur "Précédent", on revient à la galerie
+  backButton.addEventListener("click", () => {
+    modalGallery.style.display = "block";
+    modalAddImage.style.display = "none";
+  });
 });
