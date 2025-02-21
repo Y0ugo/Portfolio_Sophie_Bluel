@@ -98,9 +98,13 @@
     display: none;
   }
 
+  #backButton {
+    border: none;
+  }
+
   #modalAddImage{
 width: auto;
-height: 90%;
+height: 95%;
 
 
   }
@@ -129,17 +133,24 @@ height: 90%;
 }
 
 .conteneurAjoutImage {
-    height: 90%;
-    margin: 10px 100px 10px 100px;
+    height: 80%;
+    margin: 50px 100px 10px 100px;
+
 }
 
 .uploadImage {
 position: relative;
 }
 
-
+.titreImage {
+    margin-top: 20px;
+}
 #imageTitle {
     width: 100%;
+}
+
+.categorieImage {
+    margin-top: 20px;
 }
 
 #imageCategory {
@@ -169,3 +180,53 @@ input[type="file"] {
     background-color: #2980b9;
   }
   
+  .contentImage input {
+    height: 50px;
+    border: none;
+    box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.2); 
+  }
+
+
+  .boutonDeValidation {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 50px; 
+  }
+
+#submitImage {
+    width: 55%; 
+    height: 45px; 
+    background-color: #1D6154; 
+    text-decoration: none;
+    border-radius: 30px; 
+    border: none;
+    color: white; 
+    font-size: 18px;
+    font-family: 'Syne'; 
+    cursor: pointer;
+  }
+  
+  #submitImage:hover {
+    background-color: #155e4d; 
+  }
+
+  #imageCategory {
+    width: 100%;  
+    height: 50px;
+    border: none;
+    box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.2); 
+    font-size: 18px;  
+    padding: 10px 20px;  
+    background-color: #fff;  
+    
+  }
+  
+  #imageCategory option {
+    font-family: 'Syne';
+    font-size: 18px;
+  }
+
+  .contentImage hr {
+    margin-top: 80px;
+  }
