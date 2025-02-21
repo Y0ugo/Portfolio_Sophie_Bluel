@@ -24,6 +24,17 @@ window.addEventListener("DOMContentLoaded", () => {
         menuCategories.appendChild(option);
       });
 
+      const selectCategorie = document.getElementById("imageCategory"); // Sélection du select dans la modale
+      selectCategorie.innerHTML =
+        '<option value="">Sélectionner une catégorie</option>'; // Réinitialisation
+
+      categories.forEach((categorie) => {
+        const option = document.createElement("option");
+        option.value = categorie;
+        option.textContent = categorie;
+        selectCategorie.appendChild(option);
+      });
+
       // Fonction de suppression de projet
       function deleteProjet(id) {
         fetch(`http://localhost:5678/api/works/${id}`, {
