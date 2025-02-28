@@ -89,40 +89,55 @@ window.addEventListener("DOMContentLoaded", () => {
 
   addProject.onsubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
 
-    const data = await ajouterProjet(formData);
-  };
+    const formData = new FormData();
+    const fileInput = document.getElementById("imageUpload");
+    const title = document.getElementById("imageTitle").value; // Titre
+    //const categoryId = document.getElementById("imageCategory").value; // Catégorie
+    // const userId = localStorage.getItem("userId"); // Récupérer l'ID utilisateur
 
-  function ajouterProjet(formData) {
-    const body = Object.fromEntries(formData);
-    body.userId = localStorage.getItem("userId");
+    // Ajoute les données au FormData
+    if (fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]); // Utilisez 'imageUrl' pour le champ du fichier
+    } else {
+      console.error("Aucun fichier sélectionné");
+      return;
+    }
 
-    console.log(JSON.stringify(body));
+    formData.append("title", title);
+    formData.append("category", Number(1));
 
-    fetch(`http://localhost:5678/api/works`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Ajoute un token si nécessaire
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Échec de l'ajout du projet");
-        }
-      })
-      .then(() => {
-        console.log("ok");
-
-        return response.json();
-      })
-      .catch((error) => {
-        console.error("Erreur :", error);
+    try {
+      console.log(formData);
+      const response = await fetch(`http://localhost:5678/api/works`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Token d'authentification si nécessaire
+        },
       });
-  }
 
+      if (!response.ok) {
+        throw new Error("Échec de l'ajout du projet");
+      }
+
+      const data = await response.json();
+      console.log("Projet ajouté :", data);
+
+      // Mettre à jour l'interface utilisateur ou rafraîchissez la galerie
+      fetch("http://localhost:5678/api/works")
+        .then((response) => response.json())
+        .then((projets) => {
+          afficherProjets(projets, gallery, false, true);
+          afficherProjets(projets, imageGalleryModal, true, false);
+        })
+        .catch((error) =>
+          console.error("Erreur lors du rafraîchissement des projets :", error)
+        );
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du projet :", error);
+    }
+  };
   // Récupérer les projets depuis l'API
   fetch("http://localhost:5678/api/works")
     .then((response) => {
