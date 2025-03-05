@@ -1,9 +1,10 @@
 window.addEventListener("DOMContentLoaded", () => {
   const gallery = document.querySelector(".gallery");
   const imageGalleryModal = document.getElementById("imageGallery");
-  const menuCategories = document.getElementById("menu-categories");
   const inputFile = document.getElementById("imageUpload");
   const downloadPicture = document.getElementById("downloadPicture");
+  const categoriesButtons = document.getElementById("categories-buttons");
+  const selectCategorie = document.getElementById("imageCategory");
 
   inputFile.onchange = (evt) => {
     const [file] = inputFile.files;
@@ -18,19 +19,15 @@ window.addEventListener("DOMContentLoaded", () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Ajoute un token si nécessaire
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Échec de la suppression du projet");
         }
-      })
-      .then(() => {
         document.getElementById("projet_" + id).remove();
         document.getElementById("modale_projet_" + id).remove();
-
-        return response.json();
       })
       .catch((error) => {
         console.error("Erreur :", error);
@@ -47,8 +44,6 @@ window.addEventListener("DOMContentLoaded", () => {
     conteneur.innerHTML = "";
     projetsFiltres.forEach((projet) => {
       const figure = document.createElement("figure");
-
-      //si c'est la modale
 
       if (!afficherTitre) {
         figure.setAttribute("id", "modale_projet_" + projet.id);
@@ -68,7 +63,6 @@ window.addEventListener("DOMContentLoaded", () => {
         img_trash.alt = "supprimer";
         img_trash.classList.add("delete");
 
-        // Ajoute un écouteur d'événement sur l'icône de suppression
         img_trash.addEventListener("click", () => {
           deleteProjet(projet.id);
         });
@@ -85,6 +79,7 @@ window.addEventListener("DOMContentLoaded", () => {
       conteneur.appendChild(figure);
     });
   }
+
   const addProject = document.getElementById("formulaireAjoutProjet");
 
   addProject.onsubmit = async (event) => {
@@ -92,33 +87,40 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const formData = new FormData();
     const fileInput = document.getElementById("imageUpload");
-    const title = document.getElementById("imageTitle").value; // Titre
-    //const categoryId = document.getElementById("imageCategory").value; // Catégorie
-    // const userId = localStorage.getItem("userId"); // Récupérer l'ID utilisateur
-
-    // Ajoute les données au FormData
+    const title = document.getElementById("imageTitle").value;
+    const category = document.getElementById("imageCategory").value; // Convertir en nombre
     if (fileInput.files.length > 0) {
-      formData.append("image", fileInput.files[0]); // Utilisez 'imageUrl' pour le champ du fichier
+      formData.append("image", fileInput.files[0]);
     } else {
       console.error("Aucun fichier sélectionné");
       return;
     }
 
     formData.append("title", title);
-    formData.append("category", Number(1));
+    if (category === "Objets") {
+      formData.append("category", Number(1));
+    } else if (category === "Appartements") {
+      formData.append("category", Number(2));
+    } else {
+      formData.append("category", Number(3));
+    }
 
     try {
-      console.log(formData);
       const response = await fetch(`http://localhost:5678/api/works`, {
         method: "POST",
         body: formData,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Token d'authentification si nécessaire
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Échec de l'ajout du projet");
+        const errorData = await response.json();
+        throw new Error(
+          `Échec de l'ajout du projet: ${
+            errorData.message || response.statusText
+          }`
+        );
       }
 
       const data = await response.json();
@@ -138,6 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
       console.error("Erreur lors de l'ajout du projet :", error);
     }
   };
+
   // Récupérer les projets depuis l'API
   fetch("http://localhost:5678/api/works")
     .then((response) => {
@@ -151,37 +154,34 @@ window.addEventListener("DOMContentLoaded", () => {
         ...new Set(projets.map((projet) => projet.category.name)),
       ];
 
-      // Générer dynamiquement le menu de catégories
+      // Générer dynamiquement les boutons de catégorie et les options du select
       categories.forEach((categorie) => {
-        const option = document.createElement("option");
-        option.value = categorie;
-        option.textContent = categorie;
-        menuCategories.appendChild(option);
-      });
+        const button = document.createElement("button");
+        button.textContent = categorie;
+        button.classList.add("category-btn");
+        button.setAttribute("data-category", categorie);
+        categoriesButtons.appendChild(button);
 
-      const selectCategorie = document.getElementById("imageCategory"); // Sélection du select dans la modale
-      selectCategorie.innerHTML = '<option value=""></option>'; // Réinitialisation
-
-      categories.forEach((categorie) => {
         const option = document.createElement("option");
         option.value = categorie;
         option.textContent = categorie;
         selectCategorie.appendChild(option);
       });
 
+      categoriesButtons.addEventListener("click", function (event) {
+        if (event.target.classList.contains("category-btn")) {
+          const selectedCategory = event.target.getAttribute("data-category");
+          const projetsFiltres = selectedCategory
+            ? projets.filter(
+                (projet) => projet.category.name === selectedCategory
+              )
+            : projets;
+          afficherProjets(projetsFiltres, gallery, false, true);
+        }
+      });
+
       afficherProjets(projets, gallery, false, true); // Galerie principale
       afficherProjets(projets, imageGalleryModal, true, false); // Modale avec suppression
-
-      // Filtrer les projets selon la catégorie sélectionnée
-      menuCategories.addEventListener("change", function (event) {
-        const selectedCategory = event.target.value;
-        const projetsFiltres = selectedCategory
-          ? projets.filter(
-              (projet) => projet.category.name === selectedCategory
-            )
-          : projets;
-        afficherProjets(projetsFiltres, gallery, false, true);
-      });
     })
     .catch((error) => {
       console.error("Erreur :", error);
