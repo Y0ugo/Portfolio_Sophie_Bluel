@@ -202,3 +202,33 @@ footer nav ul {
     position: absolute;
     margin-left: -30px;
 }
+
+#categories-buttons {
+	display: flex;
+	width: 50%;
+	margin: auto;
+	margin-bottom: 50px;
+	margin-top: 50px;
+}
+.category-btn {
+    padding: 0 20px;
+    height: 37px;
+	margin-left: 20px;
+    text-decoration: none;
+    border-radius: 30px;
+    border: 1px solid #1D6154;
+    color: #1D6154;
+    font-size: 16px;
+    font-family: 'Syne';
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    transition: background-color 0.3s, color 0.3s; /* Ajoute une transition douce */
+}
+
+.category-btn:hover {
+    background-color: #1D6154;
+    color: white;
+}
+
