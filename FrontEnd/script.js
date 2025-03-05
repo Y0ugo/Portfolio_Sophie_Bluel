@@ -1,10 +1,20 @@
 window.addEventListener("DOMContentLoaded", () => {
+  const isLoggedIn = localStorage.getItem("token") !== null;
   const gallery = document.querySelector(".gallery");
   const imageGalleryModal = document.getElementById("imageGallery");
   const inputFile = document.getElementById("imageUpload");
   const downloadPicture = document.getElementById("downloadPicture");
   const categoriesButtons = document.getElementById("categories-buttons");
   const selectCategorie = document.getElementById("imageCategory");
+  const modifyButton = document.getElementById("galleryCustom");
+
+  if (isLoggedIn) {
+    modifyButton.style.display = "block";
+    categoriesButtons.style.display = "none";
+  } else {
+    modifyButton.style.display = "none";
+    categoriesButtons.style.display = "block";
+  }
 
   inputFile.onchange = (evt) => {
     const [file] = inputFile.files;
@@ -13,7 +23,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Fonction de suppression de projet
   function deleteProjet(id) {
     fetch(`http://localhost:5678/api/works/${id}`, {
       method: "DELETE",
@@ -34,7 +43,6 @@ window.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Fonction pour afficher les projets
   function afficherProjets(
     projetsFiltres,
     conteneur,
@@ -88,7 +96,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData();
     const fileInput = document.getElementById("imageUpload");
     const title = document.getElementById("imageTitle").value;
-    const category = document.getElementById("imageCategory").value; // Convertir en nombre
+    const category = document.getElementById("imageCategory").value;
+
     if (fileInput.files.length > 0) {
       formData.append("image", fileInput.files[0]);
     } else {
@@ -98,11 +107,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
     formData.append("title", title);
     if (category === "Objets") {
-      formData.append("category", Number(1));
+      formData.append("category", 1);
     } else if (category === "Appartements") {
-      formData.append("category", Number(2));
+      formData.append("category", 2);
     } else {
-      formData.append("category", Number(3));
+      formData.append("category", 3);
     }
 
     try {
@@ -126,7 +135,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       console.log("Projet ajouté :", data);
 
-      // Mettre à jour l'interface utilisateur ou rafraîchissez la galerie
       fetch("http://localhost:5678/api/works")
         .then((response) => response.json())
         .then((projets) => {
@@ -141,7 +149,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Récupérer les projets depuis l'API
   fetch("http://localhost:5678/api/works")
     .then((response) => {
       if (!response.ok) {
@@ -154,52 +161,54 @@ window.addEventListener("DOMContentLoaded", () => {
         ...new Set(projets.map((projet) => projet.category.name)),
       ];
 
-      // Générer dynamiquement les boutons de catégorie et les options du select
-      categories.forEach((categorie) => {
-        const button = document.createElement("button");
-        button.textContent = categorie;
-        button.classList.add("category-btn");
-        button.setAttribute("data-category", categorie);
-        categoriesButtons.appendChild(button);
+      if (!isLoggedIn) {
+        categories.forEach((categorie) => {
+          const button = document.createElement("button");
+          button.textContent = categorie;
+          button.classList.add("category-btn");
+          button.setAttribute("data-category", categorie);
+          categoriesButtons.appendChild(button);
+        });
 
+        categoriesButtons.addEventListener("click", function (event) {
+          if (event.target.classList.contains("category-btn")) {
+            const selectedCategory = event.target.getAttribute("data-category");
+            const projetsFiltres = selectedCategory
+              ? projets.filter(
+                  (projet) => projet.category.name === selectedCategory
+                )
+              : projets;
+            afficherProjets(projetsFiltres, gallery, false, true);
+          }
+        });
+      }
+
+      categories.forEach((categorie) => {
         const option = document.createElement("option");
         option.value = categorie;
         option.textContent = categorie;
         selectCategorie.appendChild(option);
       });
 
-      categoriesButtons.addEventListener("click", function (event) {
-        if (event.target.classList.contains("category-btn")) {
-          const selectedCategory = event.target.getAttribute("data-category");
-          const projetsFiltres = selectedCategory
-            ? projets.filter(
-                (projet) => projet.category.name === selectedCategory
-              )
-            : projets;
-          afficherProjets(projetsFiltres, gallery, false, true);
-        }
-      });
-
-      afficherProjets(projets, gallery, false, true); // Galerie principale
-      afficherProjets(projets, imageGalleryModal, true, false); // Modale avec suppression
+      afficherProjets(projets, gallery, false, true);
+      if (isLoggedIn) {
+        afficherProjets(projets, imageGalleryModal, true, false);
+      }
     })
     .catch((error) => {
       console.error("Erreur :", error);
     });
 
-  // Sélection des éléments de la modale
   const modalGallery = document.getElementById("modalGallery");
   const modalAddImage = document.getElementById("modalAddImage");
   const modalButton = document.getElementById("modalButton");
   const backButton = document.getElementById("backButton");
 
-  // Quand on clique sur "Ajouter une photo", on cache la galerie et on affiche la 2e modale
   modalButton.addEventListener("click", () => {
     modalGallery.style.display = "none";
     modalAddImage.style.display = "block";
   });
 
-  // Quand on clique sur "Précédent", on revient à la galerie
   backButton.addEventListener("click", () => {
     modalGallery.style.display = "block";
     modalAddImage.style.display = "none";
