@@ -7,6 +7,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const categoriesButtons = document.getElementById("categories-buttons");
   const selectCategorie = document.getElementById("imageCategory");
   const modifyButton = document.getElementById("galleryCustom");
+  const customFileUpload = document.querySelector(".custom-file-upload");
 
   if (isLoggedIn) {
     modifyButton.style.display = "block";
@@ -16,12 +17,18 @@ window.addEventListener("DOMContentLoaded", () => {
     categoriesButtons.style.display = "block";
   }
 
-  inputFile.onchange = (evt) => {
-    const [file] = inputFile.files;
+  inputFile.addEventListener("change", function (event) {
+    const file = event.target.files[0];
     if (file) {
-      downloadPicture.src = URL.createObjectURL(file);
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        downloadPicture.src = e.target.result;
+        downloadPicture.style.display = "block";
+        customFileUpload.style.display = "none";
+      };
+      reader.readAsDataURL(file);
     }
-  };
+  });
 
   function deleteProjet(id) {
     fetch(`http://localhost:5678/api/works/${id}`, {
