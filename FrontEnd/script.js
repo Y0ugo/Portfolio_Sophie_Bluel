@@ -11,12 +11,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn) {
     modifyButton.style.display = "block";
+    iconCrayon.style.display = "block"; // Affiche l'icône
     categoriesButtons.style.display = "none";
   } else {
     modifyButton.style.display = "none";
+    iconCrayon.style.display = "none"; // Cache l'icône
     categoriesButtons.style.display = "block";
   }
-
   inputFile.addEventListener("change", function (event) {
     const file = event.target.files[0];
     if (file) {
