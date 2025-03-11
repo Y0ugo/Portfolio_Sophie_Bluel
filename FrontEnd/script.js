@@ -74,7 +74,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       if (afficherPoubelle) {
         const img_trash = document.createElement("img");
-        img_trash.src = "assets/icons/poubelle.png";
+        img_trash.src = "assets/icons/poubelle1.png";
         img_trash.alt = "supprimer";
         img_trash.classList.add("delete");
 

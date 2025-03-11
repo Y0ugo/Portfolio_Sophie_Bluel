@@ -160,3 +160,25 @@ footer nav ul {
 	margin: 2em
 }
 
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* Permet au main de prendre toute la place disponible */
+}
+
+footer {
+    background-color: white;
+    width: 100vw; /* Prend toute la largeur de l'écran */
+    position: relative; /* S'assure qu'il reste dans le flux normal du document */
+    left: 0;
+    margin-left: -50vw; /* Déplace le footer vers la gauche de la moitié de la largeur de la fenêtre */
+    left: 50%; /* Centre le footer correctement */
+    text-align: center;
+    padding: 10px 0;
+}
+
+
